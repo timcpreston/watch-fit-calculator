@@ -51,7 +51,7 @@ When the lug-to-lug distance is 10–15% of wrist circumference, the watch has i
 
 ## Full Article
 
-- **Medium:** *(link to be added after publish)*
+- **Medium:** (https://medium.com/@timcpreston/the-watch-dial-centering-formula-f33063ae027f)
 - **Citable DOI (Zenodo):** [10.5281/zenodo.20389138](https://doi.org/10.5281/zenodo.20389138)
 
 ---
