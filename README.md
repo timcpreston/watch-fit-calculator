@@ -2,7 +2,7 @@
 
 **A live geometric calculator based on the Watch Fit Geometry Framework.**
 
-Enter your wrist measurements and watch specifications to instantly calculate ideal strap lengths, lateral overhang, and a real-time top-down visual of how your watch sits on your wrist.
+Enter your wrist measurements and watch specifications to instantly calculate ideal strap lengths, lateral overhang, and see a real-time top-down view of how your watch sits on your wrist.
 
 → **[Try the calculator](https://timcpreston.github.io/watch-fit-calculator/)**
 
@@ -65,7 +65,7 @@ No installation needed. The calculator is a single self-contained `index.html` f
 
 ## Author
 
-**Tim Preston** — Watch Fit Geometry Framework  
+**Tim Preston** — Watch Fit Geometry Framework
 *"The AI was the instrument. The curiosity was human."*
 
 ---
