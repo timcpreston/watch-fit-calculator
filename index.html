@@ -3,313 +3,233 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Watch Dial Centering Formula</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Watch Fit Calculator 2.0 — Watch Fit Geometry Framework</title>
+<meta name="description" content="Calculate the perfect watch fit using the Watch Fit Geometry Framework by Tim Preston. Enter wrist and watch measurements for instant centering and overhang results.">
 <style>
-  body { margin: 0; padding: 0; background: #0f0f0f; display: flex; justify-content: center; min-height: 100vh; }
-  .wdcf-root * { box-sizing: border-box; margin: 0; padding: 0; }
-  .wdcf-input {
-    width: 100%; background: #1a1a1a; border: 1px solid #2e2e2e;
-    border-radius: 6px; color: #ede8de;
-    font-size: 15px; padding: 7px 6px; font-family: 'DM Mono', monospace;
-    outline: none; transition: border-color 0.2s;
-  }
-  .wdcf-input:focus { border-color: #c9a84c; }
-  .wdcf-input::placeholder { color: #3a3a3a; }
-  .wdcf-input::-webkit-outer-spin-button,
-  .wdcf-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  .wdcf-input[type=number] { -moz-appearance: textfield; }
-  .wdcf-slider {
-    -webkit-appearance: none; width: 100%; height: 3px;
-    background: #252525; border-radius: 2px; outline: none; cursor: pointer;
-  }
-  .wdcf-slider::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 16px; height: 16px;
-    background: #c9a84c; border-radius: 50%; border: 2px solid #0f0f0f;
-    box-shadow: 0 0 0 1px #c9a84c66; cursor: pointer; transition: box-shadow 0.15s;
-  }
-  .wdcf-slider::-webkit-slider-thumb:hover { box-shadow: 0 0 0 4px #c9a84c33; }
-  .wdcf-slider::-moz-range-thumb {
-    width: 14px; height: 14px; background: #c9a84c;
-    border-radius: 50%; border: 2px solid #0f0f0f; cursor: pointer;
-  }
-  .wdcf-unit-btn {
-    padding: 5px 10px; border: none; cursor: pointer; font-size: 11px;
-    font-weight: 600; font-family: 'DM Sans', sans-serif;
-    letter-spacing: 0.06em; transition: all 0.15s;
-  }
-  .wdcf-copy-btn {
-    background: transparent; border: 1px solid #2e2e2e; color: #6e6e6e;
-    padding: 3px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;
-    font-family: 'DM Sans', sans-serif; transition: all 0.15s;
-  }
-  .wdcf-copy-btn:hover { border-color: #c9a84c; color: #c9a84c; }
-  .wdcf-bar-fill {
-    height: 100%; border-radius: 2px;
-    transition: width 0.4s ease;
-  }
-  .wdcf-warn {
-    background: #1a1200; border: 1px solid #3a2800; border-radius: 6px;
-    padding: 8px 10px; font-size: 11px; color: #c9853c; line-height: 1.5;
-    display: none; margin-bottom: 10px;
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:#0c0e12;display:flex;align-items:center;justify-content:center;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.wfc{background:#111318;border-radius:12px;padding:20px;color:#ccc;width:100%;max-width:620px}
+.wfc h2{color:#fff;font-size:16px;font-weight:500;text-align:center;margin:0 0 2px}
+.wfc .sub{color:#888;font-size:11px;text-align:center;margin:0 0 10px}
+.div{border:none;border-top:1px solid #2a2d35;margin:10px 0}
+.cols{display:flex;gap:16px;align-items:stretch}
+.left{width:260px;flex-shrink:0;display:flex;flex-direction:column}
+.right{flex:1;min-width:0;display:flex;flex-direction:column}
+.sec{font-size:11px;font-weight:500;letter-spacing:.06em;color:#fff;text-transform:uppercase;margin:0 0 6px}
+.row{display:flex;align-items:center;margin-bottom:5px;gap:6px}
+.row label{font-size:11px;color:#888;width:96px;flex-shrink:0}
+.rhs{display:flex;align-items:center;gap:4px}
+input[type=number]{background:#1e2128;border:1px solid #333;border-radius:6px;color:#fff;font-size:12px;padding:4px 3px;width:62px!important;max-width:62px!important;text-align:center;-moz-appearance:textfield;flex-shrink:0}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+input[type=number]:focus{outline:none;border-color:#C9A84C}
+.utog{display:flex;border:1px solid #444;border-radius:6px;overflow:hidden;flex-shrink:0}
+.utog button{width:26px;height:26px;padding:0;font-size:10px;border:none;background:#1e2128;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.utog button.on{background:#C9A84C!important;color:#111!important;font-weight:500}
+.umm{font-size:11px;color:#fff;flex-shrink:0;padding-left:2px}
+.ctog{display:flex;flex-direction:column;gap:3px;margin-bottom:6px}
+.ctog button{width:100%;padding:6px 8px;font-size:11px;border:1px solid #333;border-radius:6px;background:#1e2128;color:#666;cursor:pointer;text-align:center;transition:background .15s,color .15s,border-color .15s}
+.ctog button.on{background:#2a2d35!important;color:#C9A84C!important;border-color:#C9A84C!important;font-weight:500}
+.tail-row{display:flex;align-items:center;gap:6px}
+.tail-row .lbl{font-size:10px;color:#555}
+input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;background:#2a2d35;border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:#C9A84C;cursor:pointer;border:2px solid #111318;box-shadow:none;transition:box-shadow .15s,width .12s,height .12s}
+input[type=range]:hover::-webkit-slider-thumb{width:18px;height:18px;box-shadow:0 0 0 3px #111318,0 0 0 6px #C9A84C}
+input[type=range]:active::-webkit-slider-thumb{width:18px;height:18px;box-shadow:0 0 0 3px #111318,0 0 0 7px #C9A84C,0 0 0 10px rgba(201,168,76,.25)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#C9A84C;cursor:pointer;border:2px solid #111318;box-shadow:none}
+#tout{font-size:13px!important;font-weight:500!important;color:#fff!important;min-width:32px;text-align:right}
+.vec-val{font-size:15px;font-weight:500;color:#C9A84C;margin:0 0 8px;font-style:italic}
+.vrow{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;align-items:baseline}
+.vrow span:first-child{color:#888}
+.vval{font-weight:600;font-size:13px}
+.ok{color:#1D9E75}.warn{color:#EF9F27}.err{color:#e05a5a}
+.fstat{font-size:11px;margin-top:5px;color:#fff}
+.view-label{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.06em;margin:8px 0 4px;text-align:center}
+.card{background:#1a1d24;border-radius:8px;padding:6px;position:relative;flex:1;display:flex;flex-direction:column}
+.card svg{flex:1;width:100%;display:block}
+.svg-prompt{position:absolute;bottom:10px;left:10px;font-size:10px;color:#fff;pointer-events:none}
+.status-line{font-size:12px;font-weight:600;text-align:center;margin-top:6px}
+.footer{font-size:9px;color:#444;text-align:center;margin-top:8px;line-height:1.5}
+.col-div{width:1px;background:#2a2d35;align-self:stretch;flex-shrink:0;margin:0 2px}
+.right-inner{display:flex;flex-direction:column;height:100%}
 </style>
 </head>
 <body>
+<div class="wfc">
+  <h2>Watch Fit Calculator</h2>
+  <p class="sub">One framework for the perfect watch fit.</p>
+  <div class="div"></div>
+  <div class="cols">
 
-<div class="wdcf-root" style="background:#0f0f0f; padding:16px 14px 20px; font-family:'DM Sans',sans-serif; width:100%; max-width:420px;">
+    <!-- LEFT -->
+    <div class="left">
+      <div class="sec">Wrist</div>
+      <div class="row"><label>Circumference (C)</label><div class="rhs"><input type="number" id="C" value="0" onfocus="cz(this)" onblur="rz(this)" oninput="lim(this,'C',U);onC()"><div class="utog"><button id="bin" class="on" onclick="setU('in')">in</button><button id="bmm" onclick="setU('mm')">mm</button></div></div></div>
+      <div class="row"><label>Width (W)</label><div class="rhs"><input type="number" id="W" value="0" onfocus="cz(this)" onblur="rz(this)" oninput="lim(this,'W',WU);onW()"><div class="utog"><button id="wbin" class="on" onclick="setWU('in')">in</button><button id="wbmm" onclick="setWU('mm')">mm</button></div></div></div>
+      <div class="div"></div>
+      <div class="sec">Watch</div>
+      <div class="row"><label>Lug-to-lug (L)</label><div class="rhs"><input type="number" id="L" value="0" onfocus="cz(this)" onblur="rz(this)" oninput="lim(this,'L','mm');onL()"><span class="umm">mm</span></div></div>
+      <div class="row"><label>Case diameter (D)</label><div class="rhs"><input type="number" id="D" value="0" onfocus="cz(this)" onblur="rz(this)" oninput="lim(this,'D','mm');onD()"><span class="umm">mm</span></div></div>
+      <div class="row"><label>Lug width (LW)</label><div class="rhs"><input type="number" id="LW" value="0" onfocus="cz(this)" onblur="rz(this)" oninput="lim(this,'LW','mm');onLW()"><span class="umm">mm</span></div></div>
+      <div class="div"></div>
+      <div class="sec">Clasp</div>
+      <div class="ctog">
+        <button id="bbut" class="on" onclick="setC('but')">Butterfly clasp</button>
+        <button id="bdep" onclick="setC('dep')">Deployment clasp</button>
+        <button id="bpin" onclick="setC('pin')">Pin buckle</button>
+      </div>
+      <div class="row" id="krow">
+        <label>Clasp footprint (K)</label>
+        <div class="rhs"><input type="number" id="K" value="0" onfocus="cz(this)" onblur="rz(this)" oninput="lim(this,'K','mm');onK()"><span class="umm">mm</span></div>
+      </div>
+      <div class="div"></div>
+      <div class="sec">Desired tail length</div>
+      <div class="tail-row">
+        <span class="lbl">10mm</span>
+        <input type="range" id="tail" min="10" max="45" value="15" step="1" oninput="calc()">
+        <span class="lbl">45mm</span>
+        <span id="tout">15mm</span>
+      </div>
+    </div>
 
-  <!-- Header -->
-  <div style="text-align:center; margin-bottom:14px;">
-    <svg width="20" height="20" viewBox="0 0 28 28" style="margin-bottom:6px; display:block; margin-left:auto; margin-right:auto;">
-      <circle cx="14" cy="14" r="12" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-      <circle cx="14" cy="14" r="1.5" fill="#c9a84c"/>
-      <line x1="14" y1="14" x2="14" y2="6" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="14" y1="14" x2="19" y2="14" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
-      <line x1="14" y1="3.5" x2="14" y2="5" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="14" y1="23" x2="14" y2="24.5" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="3.5" y1="14" x2="5" y2="14" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="23" y1="14" x2="24.5" y2="14" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-    <h1 style="font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:#ede8de; margin-bottom:2px;">Watch Dial Centering Formula</h1>
-    <p style="color:#4a4a4a; font-size:11px;">One formula · equal straps · everything centered</p>
-  </div>
+    <div class="col-div"></div>
 
-  <!-- Inputs -->
-  <div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:12px; align-items:flex-start; justify-content:center;">
-    <div>
-      <label style="display:block; color:#c9a84c; font-size:9px; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:5px; font-weight:600; text-align:center;">Wrist Circumference</label>
-      <div style="display:flex; gap:6px; align-items:center;">
-        <input class="wdcf-input" type="text" inputmode="decimal" id="wristInput" placeholder="6.5" style="width:58px;" maxlength="4"
-          oninput="wdcfFilter(this);wdcfCalc()"/>
-        <div style="display:flex; background:#141414; border-radius:6px; overflow:hidden; border:1px solid #252525; flex-shrink:0;">
-          <button class="wdcf-unit-btn" id="btnMm" onclick="wdcfUnit('mm')" style="background:transparent; color:#5a5a5a;">mm</button>
-          <button class="wdcf-unit-btn" id="btnIn" onclick="wdcfUnit('in')" style="background:#c9a84c; color:#0f0f0f;">in</button>
+    <!-- RIGHT -->
+    <div class="right">
+      <div class="right-inner">
+        <div class="sec">Fit Vector</div>
+        <div class="vec-val" id="fv">[ — , — ]</div>
+        <div class="vrow"><span>6 o'clock strap</span><span class="vval" id="s6v">—</span></div>
+        <div class="vrow"><span>12 o'clock strap</span><span class="vval" id="s12v">—</span></div>
+        <div class="vrow"><span>Standard notation</span><span class="vval" id="notv" style="color:#fff">—</span></div>
+        <div class="vrow" style="margin-top:4px"><span>Lateral overhang</span><span class="vval" id="a2v">—</span></div>
+        <div class="fstat" id="fstat"></div>
+        <div class="div"></div>
+        <div class="view-label">Top-down view — lateral axis</div>
+        <div class="card" id="svgcard">
+          <svg id="tsvg" width="100%" height="100%"></svg>
+          <div class="svg-prompt" id="svg-prompt">Enter measurements to begin.</div>
+        </div>
+        <div class="status-line" id="status-line"></div>
+        <div class="footer">
+          Strap thickness (axis 3) — open problem in the Watch Fit Geometry Framework<br>
+          [ (C − L − ΣK) ÷ 2 , (D − W) ÷ 2 ] &nbsp;·&nbsp; <a href="https://doi.org/10.5281/zenodo.20496410" style="color:#555;text-decoration:none">DOI 10.5281/zenodo.20496410</a>
         </div>
       </div>
-      <div id="wristError" style="color:#c05858; font-size:9px; margin-top:3px; display:none;"></div>
-    </div>
-    <div style="text-align:center;">
-      <label style="display:block; color:#c9a84c; font-size:9px; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:5px; font-weight:600; text-align:center;">Lug-to-Lug <span style="color:#ede8de; text-transform:none;">(mm)</span></label>
-      <input class="wdcf-input" type="text" inputmode="decimal" id="lugInput" placeholder="47" style="width:55px;" maxlength="5"
-        oninput="wdcfFilter(this);wdcfCalc()"/>
-      <div id="lugError" style="color:#c05858; font-size:9px; margin-top:3px; display:none;"></div>
-    </div>
-  </div>
-
-  <!-- Tail slider -->
-  <div style="margin-bottom:12px;">
-    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:7px;">
-      <label style="color:#c9a84c; font-size:9px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600;">Desired Tail Length</label>
-      <span id="tailLabel" style="font-family:'DM Mono',monospace; color:#ede8de; font-size:13px;">20mm</span>
-    </div>
-    <input class="wdcf-slider" type="range" id="tailSlider" min="10" max="45" value="20" oninput="wdcfTail(this.value)"/>
-    <div style="display:flex; justify-content:space-between; color:#333; font-size:9px; margin-top:3px;">
-      <span>Minimal · 10mm</span>
-      <span id="tailDesc" style="color:#4a4a4a;">Standard tail — neat appearance</span>
-      <span>Generous · 45mm</span>
-    </div>
-  </div>
-
-  <div class="wdcf-warn" id="warnBox"></div>
-
-  <!-- Result card -->
-  <div id="resultCard" style="background:#141414; border:1px solid #252525; border-radius:10px; padding:12px; margin-bottom:10px; display:none; width:fit-content; margin-left:auto; margin-right:auto;">
-
-    <!-- 3-column: 6 o'clock | notation | 12 o'clock -->
-    <div style="display:grid; grid-template-columns:auto auto auto; gap:12px; align-items:center; justify-content:center; margin-bottom:10px;">
-
-      <!-- 6 o'clock strap -->
-      <div>
-        <div style="color:#8b84e8; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; font-weight:600;">6 o'clock strap</div>
-        <div style="display:flex; align-items:baseline; gap:2px; margin-bottom:2px;">
-          <span id="longStrap" style="font-family:'DM Mono',monospace; font-size:22px; color:#ede8de; font-weight:500;">—</span>
-          <span style="color:#3e3e3e; font-size:11px;">mm</span>
-        </div>
-        <div style="color:#3a3a3a; font-size:9px;">Long blade · hole side</div>
-      </div>
-
-      <!-- Standard notation (center) -->
-      <div style="text-align:center; padding:0 10px;">
-        <div style="color:#3e3e3e; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:3px;">Standard Notation</div>
-        <div style="display:flex; align-items:center; gap:6px; justify-content:center;">
-          <span id="notation" style="font-family:'DM Mono',monospace; font-size:22px; color:#c9a84c; font-weight:500; letter-spacing:0.04em;">—/—</span>
-          <button class="wdcf-copy-btn" onclick="wdcfCopy()" id="copyBtn">copy</button>
-        </div>
-        <div style="color:#3a3a3a; font-size:9px; margin-top:2px; white-space:nowrap;">6 o'clock / 12 o'clock · mm</div>
-      </div>
-
-      <!-- 12 o'clock strap -->
-      <div style="text-align:right;">
-        <div style="color:#2ab38a; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; font-weight:600;">12 o'clock strap</div>
-        <div style="display:flex; align-items:baseline; gap:2px; margin-bottom:2px; justify-content:flex-end;">
-          <span id="shortStrap" style="font-family:'DM Mono',monospace; font-size:22px; color:#ede8de; font-weight:500;">—</span>
-          <span style="color:#3e3e3e; font-size:11px;">mm</span>
-        </div>
-        <div style="color:#3a3a3a; font-size:9px;">Short blade · buckle side</div>
-      </div>
-
     </div>
 
-    <!-- Arc coverage -->
-    <div style="border-top:1px solid #1e1e1e; padding-top:10px;">
-      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-        <span style="color:#3e3e3e; font-size:9px; letter-spacing:0.12em; text-transform:uppercase;">Lug-to-lug arc coverage</span>
-        <span id="pctLabel" style="font-family:'DM Mono',monospace; font-size:11px; color:#6e6e6e;">—%</span>
-      </div>
-      <div style="height:3px; background:#1e1e1e; border-radius:2px; margin-bottom:4px; overflow:hidden;">
-        <div class="wdcf-bar-fill" id="propBar" style="width:0%; background:#6e6e6e;"></div>
-      </div>
-      <div style="display:flex; justify-content:space-between; color:#2a2a2a; font-size:8px; margin-bottom:6px;">
-        <span>0%</span><span style="color:#3a3a3a;">arc coverage (reference only)</span><span>30%+</span>
-      </div>
-      <div style="font-size:9px; color:#2e2e2e; line-height:1.6; border-top:1px solid #1e1e1e; padding-top:8px;">
-        Note: this measures lug-to-lug arc coverage only — not visual case size. Ideal arc coverage ranges are under active research and will be addressed in a companion piece.
-      </div>
-    </div>
-  </div>
-
-  <!-- Hint box -->
-  <div id="hintBox" style="background:#141414; border:1px solid #1e1e1e; border-radius:6px; padding:10px; text-align:center; margin-bottom:10px;">
-    <p style="color:#ede8de; font-size:11px; line-height:1.6;">Enter your wrist circumference and lug-to-lug distance to calculate perfectly balanced strap lengths.</p>
-  </div>
-
-  <!-- Footer formula -->
-  <div style="border:1px solid #1a1a1a; border-radius:6px; padding:10px 14px; text-align:center; width:fit-content; margin:0 auto;">
-    <div style="font-family:'Playfair Display',serif; color:#c9a84c; font-size:11px; font-style:italic; margin-bottom:2px;">Watch Dial Centering Formula</div>
-    <div style="font-family:'DM Mono',monospace; color:#3e3e3e; font-size:11px; margin-bottom:2px;">(C − L) ÷ 2 = ideal functional strap length</div>
-    <div style="color:#2a2a2a; font-size:9px;">C = wrist circumference · L = lug-to-lug distance</div>
   </div>
 </div>
 
 <script>
-var unit='in', tail=20;
-var MIN_WRIST_MM=99, MAX_WRIST_MM=300;
-var MIN_LUG=5, MAX_LUG=100;
-var wristMmPrecise=null;
+var U='in',WU='in',CT='but';
+var Cmm=0,Wmm=0,Lmm=0,Dmm=0,LWmm=0,Kmm=0;
+var Cin=null,Win=null;
+var LIM={C:{mmMin:100,mmMax:305,inMin:4,inMax:12},W:{mmMin:38,mmMax:102,inMin:1.5,inMax:4},L:{mmMin:30,mmMax:60,inMin:1.2,inMax:2.4},D:{mmMin:20,mmMax:55,inMin:0.8,inMax:2.2},LW:{mmMin:6,mmMax:30,inMin:0.24,inMax:1.2},K:{mmMin:5,mmMax:76,inMin:0.2,inMax:3}};
 
-function wdcfFilter(el){
-  var v=el.value.replace(/[^0-9.]/g,'');
-  var d=v.indexOf('.');
-  if(d!==-1){
-    v=v.slice(0,d+1)+v.slice(d+1).replace(/\./g,'');
-    if(v.length>d+3) v=v.slice(0,d+3);
+function cz(el){if(parseFloat(el.value)===0||el.value==='0')el.value='';}
+function rz(el){if(el.value===''||el.value===null)el.value='0';}
+function lim(el,f,u){var v=parseFloat(el.value);if(isNaN(v))return;var mx=u==='mm'?LIM[f].mmMax:LIM[f].inMax;if(v>mx)el.value=mx;}
+function toIn(mm){return Math.round(mm/25.4*100)/100;}
+function setBtn(id,on){document.getElementById(id).classList.toggle('on',on);}
+function onC(){var v=parseFloat(document.getElementById('C').value);if(isNaN(v)){Cmm=0;calc();return;}if(U==='in'){Cin=v;Cmm=v*25.4;}else{Cmm=v;Cin=null;}calc();}
+function onW(){var v=parseFloat(document.getElementById('W').value);if(isNaN(v)){Wmm=0;calc();return;}if(WU==='in'){Win=v;Wmm=v*25.4;}else{Wmm=v;Win=null;}calc();}
+function onL(){var v=parseFloat(document.getElementById('L').value);if(isNaN(v)){Lmm=0;calc();return;}Lmm=v;calc();}
+function onD(){var v=parseFloat(document.getElementById('D').value);if(isNaN(v)){Dmm=0;calc();return;}Dmm=v;calc();}
+function onLW(){var v=parseFloat(document.getElementById('LW').value);if(isNaN(v)){LWmm=0;calc();return;}LWmm=v;calc();}
+function onK(){var v=parseFloat(document.getElementById('K').value);if(isNaN(v)){Kmm=0;calc();return;}Kmm=v;calc();}
+function setU(u){if(u===U)return;var el=document.getElementById('C');if(u==='in'){Cin=null;el.value=Cmm?toIn(Cmm):0;}else{if(Cin!==null)Cmm=Cin*25.4;el.value=Cmm?Math.round(Cmm):0;Cin=null;}U=u;setBtn('bin',u==='in');setBtn('bmm',u==='mm');calc();}
+function setWU(u){if(u===WU)return;var el=document.getElementById('W');if(u==='in'){Win=null;el.value=Wmm?toIn(Wmm):0;}else{if(Win!==null)Wmm=Win*25.4;el.value=Wmm?Math.round(Wmm):0;Win=null;}WU=u;setBtn('wbin',u==='in');setBtn('wbmm',u==='mm');calc();}
+function setC(t){CT=t;['pin','dep','but'].forEach(function(x){document.getElementById('b'+x).classList.remove('on');});document.getElementById('b'+t).classList.add('on');document.getElementById('krow').style.visibility=t==='pin'?'hidden':'visible';calc();}
+
+function calc(){
+  var C=Cmm,W=Wmm,L=Lmm,D=Dmm,LW=LWmm,K=CT==='pin'?0:Kmm;
+  var tail=parseInt(document.getElementById('tail').value)||15;
+  var te=document.getElementById('tout');
+  te.textContent=tail+'mm';te.style.fontSize='13px';te.style.fontWeight='500';te.style.color='#fff';
+  var noData=C<=0||L<=0;
+  document.getElementById('svg-prompt').style.display=noData?'block':'none';
+  var sl=document.getElementById('status-line');
+  if(noData){
+    document.getElementById('fv').textContent='[ — , — ]';
+    ['s6v','s12v'].forEach(function(x){document.getElementById(x).textContent='—';document.getElementById(x).className='vval';});
+    document.getElementById('notv').textContent='—';
+    document.getElementById('a2v').textContent='—';document.getElementById('a2v').className='vval';
+    document.getElementById('fstat').textContent='Enter measurements to begin.';document.getElementById('fstat').className='fstat';
+    sl.textContent='';drawTop(W,D,LW,0,true,false);return;
   }
-  el.value=v;
-  if(unit==='mm') wristMmPrecise=null; // user edited mm directly, clear stored value
+  var a1=(C-L-K)/2,a2=(D-W)/2,a1r=Math.round(a1*10)/10,a2r=Math.round(a2*10)/10;
+  var s6=Math.round(a1+tail),s12=Math.round(a1),tooBig=a1r<=0,oh=a2r>0;
+  document.getElementById('fv').textContent='[ '+a1r+'mm , '+a2r+'mm ]';
+  document.getElementById('s6v').textContent=tooBig?'—':s6+'mm';document.getElementById('s6v').className='vval '+(tooBig?'err':'ok');
+  document.getElementById('s12v').textContent=tooBig?'—':s12+'mm';document.getElementById('s12v').className='vval '+(tooBig?'err':'ok');
+  document.getElementById('notv').textContent=tooBig?'—':s6+'/'+s12+'mm';
+  document.getElementById('a2v').textContent=a2r<=0?a2r+'mm (no overhang)':'+'+a2r+'mm overhang';
+  document.getElementById('a2v').className='vval '+(a2r<=0?'ok':a2r<=3?'warn':'err');
+  var st=tooBig?'C \u2212 L \u2212 \u03a3K \u2264 0 \u2014 case too large.':a2r>5?'Case overhangs significantly.':a2r>0?'Minor overhang \u2014 may be acceptable.':'\u2714 Perfect fit on both axes.';
+  document.getElementById('fstat').textContent=st;
+  document.getElementById('fstat').className='fstat '+(tooBig||a2r>5?'err':a2r>0?'warn':'ok');
+  if(tooBig){sl.textContent='case too large for wrist';sl.style.color='#e05a5a';}
+  else if(oh){sl.textContent='overhangs '+Math.round(a2r*10)/10+'mm per side';sl.style.color='#EF9F27';}
+  else{sl.textContent='\u2714 Perfect fit \u2014 case within wrist edges';sl.style.color='#1D9E75';}
+  requestAnimationFrame(function(){drawTop(W,D,LW,a2r,false,tooBig);});
 }
 
-function wdcfUnit(u){
-  var w=parseFloat(document.getElementById('wristInput').value);
-  var wMm;
-  if(unit==='in'){
-    wMm=w*25.4;
-    wristMmPrecise=wMm; // store precise mm when converting from inches
-  } else {
-    wMm=(wristMmPrecise!==null)?wristMmPrecise:w; // use precise value if available
+function drawTop(W,D,LW,a2,noData,tooBig){
+  var svg=document.getElementById('tsvg');
+  var card=document.getElementById('svgcard');
+  if(noData||W<=0||D<=0){svg.innerHTML='';return;}
+  var VW=card.clientWidth||300;
+  var VH=card.clientHeight||300;
+  svg.setAttribute('viewBox','0 0 '+VW+' '+VH);
+  var LBL=36,PAD=6;
+  var cx=VW/2;
+  var wW=VW-PAD*2;
+  var maxWH=VH-LBL*2-10;
+  var wH=Math.min(Math.max(W*1.8,60),maxWH);
+  var wy=LBL+(maxWH-wH)/2;
+  var wx=PAD,cy=wy+wH/2;
+  var ppm=wW/W;
+  var cr=Math.min((D/2)*ppm,wH/2*0.88);
+  var sW=Math.min(LW*ppm,wH*0.55);
+  var s12H=cy-cr-wy,s6H=wy+wH-(cy+cr);
+  var oh=a2>0,cStroke=(tooBig||oh)?'#e05a5a':'#1D9E75';
+  var s='';
+  s+='<rect x="'+wx+'" y="'+wy+'" width="'+wW+'" height="'+wH+'" rx="14" fill="#1e2128" stroke="#444" stroke-width="1.5"/>';
+  s+='<text font-size="11" font-weight="500" text-anchor="start" x="'+(wx+10)+'" y="'+(cy+4)+'" fill="#666">W='+Math.round(W)+'mm</text>';
+  if(!tooBig){
+    s+='<rect x="'+(cx-sW/2)+'" y="'+wy+'" width="'+sW+'" height="'+s12H.toFixed(1)+'" rx="3" fill="#7F77DD" opacity="0.85"/>';
+    s+='<rect x="'+(cx-sW/2)+'" y="'+(cy+cr).toFixed(1)+'" width="'+sW+'" height="'+s6H.toFixed(1)+'" rx="3" fill="#1D9E75" opacity="0.85"/>';
   }
-  unit=u;
-  document.getElementById('btnMm').style.background=u==='mm'?'#c9a84c':'transparent';
-  document.getElementById('btnMm').style.color=u==='mm'?'#0f0f0f':'#5a5a5a';
-  document.getElementById('btnIn').style.background=u==='in'?'#c9a84c':'transparent';
-  document.getElementById('btnIn').style.color=u==='in'?'#0f0f0f':'#5a5a5a';
-  document.getElementById('wristInput').placeholder=u==='mm'?'170':'6.7';
-  document.getElementById('wristInput').style.width=u==='mm'?'55px':'68px';
-  if(!isNaN(wMm)&&wMm>0){
-    var converted=u==='in'
-      ? parseFloat((wMm/25.4).toFixed(2))
-      : Math.round(wMm);
-    document.getElementById('wristInput').value=converted;
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+cr+'" fill="#2a2d35" stroke="'+cStroke+'" stroke-width="2"/>';
+  if(tooBig){s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+cr+'" fill="rgba(224,90,90,0.15)" stroke="#e05a5a" stroke-width="1.5" stroke-dasharray="4 3"/>';}
+  var br=cr*0.90,dr=cr*0.75;
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+br+'" fill="#1e2128" stroke="#555" stroke-width="1"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+dr+'" fill="#111318" stroke="#888" stroke-width="1"/>';
+  for(var i=0;i<12;i++){
+    var ang=(i/12)*Math.PI*2-Math.PI/2;
+    var mx2=cx+Math.cos(ang)*(dr*0.85),my2=cy+Math.sin(ang)*(dr*0.85);
+    s+='<circle cx="'+mx2.toFixed(1)+'" cy="'+my2.toFixed(1)+'" r="'+(i%3===0?2.5:1.5)+'" fill="#aaa"/>';
   }
-  wdcfCalc();
+  var h12r=dr*0.60,h3r=dr*0.45;
+  s+='<line x1="'+cx+'" y1="'+(cy-h12r).toFixed(1)+'" x2="'+cx+'" y2="'+(cy+dr*0.12).toFixed(1)+'" stroke="#fff" stroke-width="2" stroke-linecap="round"/>';
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+h3r).toFixed(1)+'" y2="'+cy+'" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="2.5" fill="#C9A84C"/>';
+  s+='<text font-size="11" font-weight="500" text-anchor="start" x="'+(cx+cr+8).toFixed(1)+'" y="'+(cy+4)+'" fill="#aaa">D='+Math.round(D*10)/10+'mm</text>';
+  if(!tooBig){
+    s+='<text font-size="12" font-weight="500" text-anchor="middle" x="'+cx+'" y="'+(wy/2+5)+'" fill="#7F77DD">12 o\'clock strap</text>';
+    var b=(wy+wH+VH)/2;
+    s+='<text font-size="12" font-weight="500" text-anchor="middle" x="'+cx+'" y="'+(b+5).toFixed(1)+'" fill="#1D9E75">6 o\'clock strap</text>';
+  }
+  if(!tooBig&&oh){
+    var op=Math.min(a2*ppm,32);
+    var oY=cy-cr*0.6,oH=cr*1.2;
+    s+='<rect x="'+(cx-cr-op)+'" y="'+oY+'" width="'+op+'" height="'+oH+'" rx="3" fill="rgba(224,90,90,0.2)" stroke="#e05a5a" stroke-width="1" stroke-dasharray="3 2"/>';
+    s+='<rect x="'+(cx+cr)+'" y="'+oY+'" width="'+op+'" height="'+oH+'" rx="3" fill="rgba(224,90,90,0.2)" stroke="#e05a5a" stroke-width="1" stroke-dasharray="3 2"/>';
+  }
+  svg.innerHTML=s;
 }
-
-function wdcfTail(v){
-  tail=parseInt(v);
-  document.getElementById('tailLabel').textContent=tail+'mm';
-  document.getElementById('tailDesc').textContent=
-    tail<15?'Minimal — clean, military look':
-    tail<35?'Standard tail — neat appearance':
-    'Generous — comfortable overlap';
-  wdcfCalc();
-}
-
-function wdcfCalc(){
-  var wRaw=document.getElementById('wristInput').value;
-  var lRaw=document.getElementById('lugInput').value;
-  var wDot=wRaw.indexOf('.');
-  if(wDot!==-1&&wRaw.length>wDot+3) document.getElementById('wristInput').value=wRaw.slice(0,wDot+3);
-  var lDot=lRaw.indexOf('.');
-  if(lDot!==-1&&lRaw.length>lDot+3) document.getElementById('lugInput').value=lRaw.slice(0,lDot+3);
-  var w=parseFloat(document.getElementById('wristInput').value);
-  var l=parseFloat(document.getElementById('lugInput').value);
-  var wMm=unit==='in'?w*25.4:w;
-  var wristErr='', lugErr='';
-  var wristHasVal=!isNaN(wMm)&&document.getElementById('wristInput').value!=='';
-  var lugHasVal=!isNaN(l)&&document.getElementById('lugInput').value!=='';
-
-  if(wristHasVal){
-    if(wMm<MIN_WRIST_MM) wristErr='Minimum wrist size is 100mm (3.9in)';
-    else if(wMm>MAX_WRIST_MM) wristErr='Maximum wrist size is 300mm (11.8in)';
-  }
-  if(lugHasVal){
-    if(l<MIN_LUG) lugErr='Minimum lug-to-lug is 5mm';
-    else if(l>MAX_LUG) lugErr='Maximum lug-to-lug is 100mm';
-    else if(wristHasVal&&!wristErr&&l>=wMm) lugErr='Must be smaller than wrist circumference';
-  }
-
-  document.getElementById('wristError').style.display=wristErr?'block':'none';
-  document.getElementById('wristError').textContent=wristErr;
-  document.getElementById('lugError').style.display=lugErr?'block':'none';
-  document.getElementById('lugError').textContent=lugErr;
-
-  var valid=wristHasVal&&lugHasVal&&!wristErr&&!lugErr&&wMm>=MIN_WRIST_MM&&wMm<=MAX_WRIST_MM&&l>=MIN_LUG&&l<=MAX_LUG&&l<wMm;
-
-  var wb=document.getElementById('warnBox');
-  if(valid){
-    var msgs=[];
-    if(l<10) msgs.push('Lug-to-lug under 10mm is below the range of most production watches — please verify your spec.');
-    if(l>80) msgs.push('Lug-to-lug over 80mm is above the range of most production watches — please verify your spec.');
-    if(msgs.length>0){wb.innerHTML=msgs.join('<br>');wb.style.display='block';}
-    else wb.style.display='none';
-  } else {
-    wb.style.display='none';
-  }
-
-  var rc=document.getElementById('resultCard');
-  var hb=document.getElementById('hintBox');
-
-  if(valid){
-    var fn=(wMm-l)/2;
-    var sh=Math.round(fn), lo=Math.round(fn+tail);
-    var pct=(l/wMm)*100;
-    document.getElementById('longStrap').textContent=lo;
-    document.getElementById('shortStrap').textContent=sh;
-    document.getElementById('notation').textContent=lo+'/'+sh;
-    document.getElementById('pctLabel').textContent=pct.toFixed(1)+'%';
-    var bw=Math.min(pct,30)/30*100;
-    document.getElementById('propBar').style.width=bw+'%';
-    document.getElementById('propBar').style.background='#6e6e6e';
-    document.getElementById('pctLabel').style.color='#6e6e6e';
-    rc.style.display='block'; hb.style.display='none';
-  } else {
-    rc.style.display='none';
-    hb.style.display=(wristHasVal||lugHasVal)?'none':'block';
-  }
-}
-
-function wdcfCopy(){
-  var n=document.getElementById('notation').textContent;
-  if(n==='—/—')return;
-  navigator.clipboard.writeText(n+'mm').catch(function(){});
-  var b=document.getElementById('copyBtn');
-  b.textContent='copied!';b.style.color='#5a9e72';b.style.borderColor='#5a9e72';
-  setTimeout(function(){b.textContent='copy';b.style.color='';b.style.borderColor='';},1800);
-}
-
-wdcfCalc();
+calc();
+window.addEventListener('resize',function(){calc();});
 </script>
 </body>
 </html>
