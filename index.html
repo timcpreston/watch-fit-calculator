@@ -44,7 +44,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .ok{color:#1D9E75}.warn{color:#EF9F27}.err{color:#e05a5a}
 .fstat{font-size:11px;margin-top:5px;color:#fff}
 .view-label{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.06em;margin:8px 0 4px;text-align:center}
-.card{background:#1a1d24;border-radius:8px;padding:6px;position:relative;flex:1;display:flex;flex-direction:column}
+.card{background:#1a1d24;border-radius:8px;padding:6px;position:relative;flex:1;display:flex;flex-direction:column;overflow:hidden}
 .card svg{flex:1;width:100%;display:block}
 .svg-prompt{position:absolute;bottom:10px;left:10px;font-size:10px;color:#fff;pointer-events:none}
 .status-line{font-size:12px;font-weight:600;text-align:center;margin-top:6px}
@@ -59,8 +59,6 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   <p class="sub">One framework for the perfect watch fit.</p>
   <div class="div"></div>
   <div class="cols">
-
-    <!-- LEFT -->
     <div class="left">
       <div class="sec">Wrist</div>
       <div class="row"><label>Circumference (C)</label><div class="rhs"><input type="number" id="C" value="0" onfocus="cz(this)" onblur="rz(this)" oninput="lim(this,'C',U);onC()"><div class="utog"><button id="bin" class="on" onclick="setU('in')">in</button><button id="bmm" onclick="setU('mm')">mm</button></div></div></div>
@@ -90,10 +88,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
         <span id="tout">15mm</span>
       </div>
     </div>
-
     <div class="col-div"></div>
-
-    <!-- RIGHT -->
     <div class="right">
       <div class="right-inner">
         <div class="sec">Fit Vector</div>
@@ -111,12 +106,12 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
         </div>
         <div class="status-line" id="status-line"></div>
         <div class="footer">
-          Strap thickness (axis 3) — open problem in the Watch Fit Geometry Framework<br>
-          [ (C − L − ΣK) ÷ 2 , (D − W) ÷ 2 ] &nbsp;·&nbsp; <a href="https://doi.org/10.5281/zenodo.20496410" style="color:#555;text-decoration:none">DOI 10.5281/zenodo.20496410</a>
+          Strap thickness (axis 3) — open problem<br>
+          [ (C − L − ΣK) ÷ 2 , (D − W) ÷ 2 ]<br>
+          <a href="https://doi.org/10.5281/zenodo.20496410" style="color:#555;text-decoration:none">DOI 10.5281/zenodo.20496410</a>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -124,7 +119,15 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 var U='in',WU='in',CT='but';
 var Cmm=0,Wmm=0,Lmm=0,Dmm=0,LWmm=0,Kmm=0;
 var Cin=null,Win=null;
+// Cached card dimensions — only updated on resize, never during calc()
+var VW=0,VH=0;
 var LIM={C:{mmMin:100,mmMax:305,inMin:4,inMax:12},W:{mmMin:38,mmMax:102,inMin:1.5,inMax:4},L:{mmMin:30,mmMax:60,inMin:1.2,inMax:2.4},D:{mmMin:20,mmMax:55,inMin:0.8,inMax:2.2},LW:{mmMin:6,mmMax:30,inMin:0.24,inMax:1.2},K:{mmMin:5,mmMax:76,inMin:0.2,inMax:3}};
+
+function measureCard(){
+  var card=document.getElementById('svgcard');
+  VW=card.clientWidth||300;
+  VH=card.clientHeight||300;
+}
 
 function cz(el){if(parseFloat(el.value)===0||el.value==='0')el.value='';}
 function rz(el){if(el.value===''||el.value===null)el.value='0';}
@@ -171,15 +174,14 @@ function calc(){
   if(tooBig){sl.textContent='case too large for wrist';sl.style.color='#e05a5a';}
   else if(oh){sl.textContent='overhangs '+Math.round(a2r*10)/10+'mm per side';sl.style.color='#EF9F27';}
   else{sl.textContent='\u2714 Perfect fit \u2014 case within wrist edges';sl.style.color='#1D9E75';}
-  requestAnimationFrame(function(){drawTop(W,D,LW,a2r,false,tooBig);});
+  drawTop(W,D,LW,a2r,false,tooBig);
 }
 
 function drawTop(W,D,LW,a2,noData,tooBig){
   var svg=document.getElementById('tsvg');
-  var card=document.getElementById('svgcard');
   if(noData||W<=0||D<=0){svg.innerHTML='';return;}
-  var VW=card.clientWidth||300;
-  var VH=card.clientHeight||300;
+  // Use cached dimensions — never read clientWidth/clientHeight here
+  if(VW===0)measureCard();
   svg.setAttribute('viewBox','0 0 '+VW+' '+VH);
   var LBL=36,PAD=6;
   var cx=VW/2;
@@ -228,8 +230,9 @@ function drawTop(W,D,LW,a2,noData,tooBig){
   }
   svg.innerHTML=s;
 }
-calc();
-window.addEventListener('resize',function(){calc();});
+
+window.addEventListener('resize',function(){measureCard();calc();});
+window.addEventListener('load',function(){measureCard();calc();});
 </script>
 </body>
 </html>
